@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd7c2c496ac99074ba657979f4faf208, type: 3}
+  m_Name: Level 4
+  m_EditorClassIdentifier: 
+  title:
+  - Two paths to the same end!!!
+  - To the Jungle
+  - Excuse me, do you have a minute to talk?
+  introAnger:
+  - Get to the exit killing as much pink squares as possible.
+  - To shoot, hit our green hero against the walls.
+  - Don't worry about the ammo, it is almost unlimited.
+  - You'll be able to kill only nine bastards.
+  introJoy:
+  - Welcome to the jungle green monkeeeeeeey!
+  - Team Humanity is cutting out the trees to steal your bananas...those selfish
+  - Jump from vine to vine until you reach the exit to the next stage.
+  - Hurry up!
+  introSurprise:
+  - Skept-i-Cism is trying to convert all the people in Faithyrule against their princess.
+  - He wants a government based on fear and lies.
+  - Visit each home in the town and make their inhabitants see reason about this situation.
+  - Watch out! One path is a trap!
+  introRejectedAnger: []
+  introRejectedJoy: []
+  introRejectedSurprise: []
+  expectedPath: 0b0000000c00000011000000160000001700000018000000130000000e0000000f000000
+  exitReachedAnger:
+  - Good job!!!!
+  - Lets see...20 adults, 30 children, a dog, 3 cats...all dead
+  - Next chaaaaaaaaaaaallenge!!!
+  exitReachedJoy: []
+  exitReachedSurprise: []
