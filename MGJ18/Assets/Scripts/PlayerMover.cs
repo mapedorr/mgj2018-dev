@@ -47,6 +47,7 @@ public class PlayerMover : MonoBehaviour
 		{
 			if (hit.transform == null)
 			{
+				currentNode.Hits += 1;
 				StartCoroutine (WallHitFeedback (destinationDir, currentNode.transform.gameObject));
 			}
 			else
@@ -138,12 +139,7 @@ public class PlayerMover : MonoBehaviour
 			hitSfx.Play ();
 		}
 
-		iTween.ShakePosition (Camera.main.gameObject, iTween.Hash (
-			"x", shakeDir.x * 0.1f,
-			"y", shakeDir.y * 0.1f,
-			"time", 0.5f,
-			"easetype", iTween.EaseType.easeOutBounce
-		));
+		Utility.ShakeCamera (shakeDir);
 
 		iTween.ColorTo (shakeTarget, iTween.Hash (
 			"r", 1f,
@@ -173,7 +169,7 @@ public class PlayerMover : MonoBehaviour
 		yield return null;
 	}
 
-	void UpdateBoard ()
+	public void UpdateBoard ()
 	{
 		CurrentPos = Utility.Vector2Round (new Vector2 (transform.position.x, transform.position.y));
 

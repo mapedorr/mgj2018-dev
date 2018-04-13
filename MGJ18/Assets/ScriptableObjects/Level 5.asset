@@ -11,10 +11,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd7c2c496ac99074ba657979f4faf208, type: 3}
   m_Name: Level 5
   m_EditorClassIdentifier: 
-  title: []
-  angerLines: []
-  joyLines: []
-  surpriseLines: []
-  rejectedAngerLines: []
-  rejectedJoyLines: []
-  rejectedSurpriseLines: []
+  title:
+  - Call of duty on the battlefield
+  - Crossing River Ambi-Ance
+  - Ziha, town of idiots
+  introAnger:
+  - We are in war soldier...with...
+  - Hitler from the future
+  - This mission will be harder...get ready to face more enemies
+  - <b>YOU CAN SHOOT MORE THAN ONCE IN SOME ROOMS</b>
+  introJoy:
+  - River Ambi-Ance...the widest in the world...this world...MY WORLD!!!!
+  - Be aware of the piranhas and the sharks and the medusas and the fishermen
+  - and the jellyfish and a lot of other aquatic enemies.
+  - 'You have #. I''ll be waiting for you with my timekeeper. Look! it''s pink.'
+  introSurprise:
+  - I hate the folks in this town...they are so...stupid
+  - But, they are beings we must save anyway. Ya know what to do!
+  - Find the right path, because is the only way to get to Monserrat
+  exitReachedAnger:
+  - '...holly shit...not even the children were safe from your cruelty'
+  - I have seen nasty things...but not at that level...
+  - Come on! soldier. The colonel is waiting for you.
+  exitReachedJoy:
+  - Wooooooooaaaaaaaa!!!! You did it...in-cre-di-ble...
+  - Let's go, Team Humanity is near...I can smell their rubber boots and saws
+  exitReachedSurprise:
+  - Good job! I feel Skept-i-Cism will lose this battle.
+  - Monserrat is our last destiny. Skept-i-Cism will be there too...also his army...prepare
+    yourself
+  expectedPath: 03000000080000000900000004000000050000000a0000000f0000000e0000001300000014000000
+  expectedTime: 6

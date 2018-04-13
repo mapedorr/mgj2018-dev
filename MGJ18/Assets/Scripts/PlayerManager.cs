@@ -31,7 +31,8 @@ public class PlayerManager : MonoBehaviour
 
 	// ═══╣ privates ╠═══
 	GameManager m_gameManager;
-	List<Node> steps = new List<Node> ();
+	BoardManager m_boardManager;
+	List<Node> m_steps = new List<Node> ();
 
 	Color m_buttonColor;
 	public Color ButtonColor
@@ -44,6 +45,7 @@ public class PlayerManager : MonoBehaviour
 	void Awake ()
 	{
 		m_gameManager = Object.FindObjectOfType<GameManager> ();
+		m_boardManager = Object.FindObjectOfType<BoardManager> ();
 		playerMover = GetComponent<PlayerMover> ();
 		playerInput = GetComponent<PlayerInput> ();
 		playerInput.InputEnabled = true;
@@ -120,7 +122,7 @@ public class PlayerManager : MonoBehaviour
 
 	public void Undo ()
 	{
-		if (steps.Count > 0)
+		if (m_steps.Count > 0)
 		{
 			if (undoSfx)
 			{
@@ -129,17 +131,25 @@ public class PlayerManager : MonoBehaviour
 
 			StartCoroutine (Utility.HighlightGUIObject (undoButton, m_buttonColor));
 
+			Node currentNode = m_boardManager.FindPlayerNode ();
+			if (currentNode.Hits >= 1)
+			{
+				currentNode.Hits = 0;
+				m_gameManager.UpdatePoints (-1);
+			}
+
 			// get the previous node
-			int last = steps.Count - 1;
-			Node previousNode = steps[last];
+			int last = m_steps.Count - 1;
+			Node previousNode = m_steps[last];
 
 			// move the player to the previous node, mark it as not visited and
 			// update the game score
 			transform.position = previousNode.Coordinate;
+			playerMover.UpdateBoard ();
 			previousNode.Visited = false;
 
 			// remove the node from the steps list
-			steps.RemoveAt (last);
+			m_steps.RemoveAt (last);
 		}
 
 		if (undoEvent != null)
@@ -150,23 +160,31 @@ public class PlayerManager : MonoBehaviour
 
 	public void Restart ()
 	{
-		if (steps.Count > 0)
+		// if (m_steps.Count > 0)
+		// {
+		if (restartSfx)
 		{
-			if (restartSfx)
-			{
-				restartSfx.Play ();
-			}
+			restartSfx.Play ();
+		}
 
-			StartCoroutine (Utility.HighlightGUIObject (restartButton, m_buttonColor));
+		StartCoroutine (Utility.HighlightGUIObject (restartButton, m_buttonColor));
 
-			transform.position = steps[0].Coordinate;
-			foreach (var node in steps)
+		if (m_steps.Count > 0)
+		{
+			transform.position = m_steps[0].Coordinate;
+			m_steps = new List<Node> ();
+		}
+
+		foreach (var node in m_boardManager.AllNodes)
+		{
+			if (!node.disabled)
 			{
 				node.Visited = false;
 			}
-			steps = new List<Node> ();
-			m_gameManager.RestartLevel ();
 		}
+		playerMover.UpdateBoard ();
+		m_gameManager.RestartLevel ();
+		// }
 
 		if (restartEvent != null)
 		{
@@ -202,21 +220,21 @@ public class PlayerManager : MonoBehaviour
 		if (previousNode)
 		{
 			// store the previous node
-			steps.Add (previousNode);
+			m_steps.Add (previousNode);
 		}
 	}
 
-	void OnTriggerEnter2D (Collider2D other)
-	{
-		if (other.tag == "Exit")
-		{
-			m_gameManager.ExitReached ();
-			if (endReachedEvent != null)
-			{
-				endReachedEvent.Invoke ();
-			}
-		}
-	}
+	// void OnTriggerEnter2D (Collider2D other)
+	// {
+	// 	if (other.tag == "Exit")
+	// 	{
+	// 		m_gameManager.ExitReached ();
+	// 		if (endReachedEvent != null)
+	// 		{
+	// 			endReachedEvent.Invoke ();
+	// 		}
+	// 	}
+	// }
 
 	void ToggleGUIActions (bool interactable)
 	{
@@ -234,6 +252,21 @@ public class PlayerManager : MonoBehaviour
 		{
 			endMovementEvent.Invoke ();
 		}
+
+		// check if the current node is the exit
+		if (m_boardManager)
+		{
+			if (m_boardManager.FindPlayerNode ().isExit)
+			{
+				if (endReachedEvent != null)
+				{
+					endReachedEvent.Invoke ();
+				}
+				m_gameManager.ExitReached ();
+			}
+
+		}
+
 	}
 
 	public void HitFinished ()
@@ -242,5 +275,10 @@ public class PlayerManager : MonoBehaviour
 		{
 			hitEvent.Invoke ();
 		}
+	}
+
+	public List<Node> GetSteps ()
+	{
+		return m_steps;
 	}
 }

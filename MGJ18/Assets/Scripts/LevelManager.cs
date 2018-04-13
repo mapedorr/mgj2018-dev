@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
 	public Text dialogueText;
 	public MaskableGraphic talkButton;
 	public AudioSource talkSound;
+	public Text shoutText;
 
 	// ═══╣ privates ╠═══
 	GameManager m_gameManager;
@@ -154,7 +155,15 @@ public class LevelManager : MonoBehaviour
 	{
 		if (m_counter <= m_dialogue.Length - 1)
 		{
-			dialogueText.text += m_dialogue[m_counter++] + "\n";
+
+			string currentLine = m_dialogue[m_counter++];
+
+			if (m_gameManager.Emotion == Emotion.JOY && currentLine.Contains ("#"))
+			{
+				currentLine = currentLine.Replace ("#", "<b>" + level.expectedTime + " seconds</b>");
+			}
+
+			dialogueText.text += currentLine + "\n";
 
 			if (m_counter == m_dialogue.Length)
 			{
@@ -176,12 +185,14 @@ public class LevelManager : MonoBehaviour
 		}
 	}
 
-	public void HitReaction () { }
-	public void UndoReaction () { }
-	public void RestartReaction () { }
-
 	public void EndReachedReaction ()
 	{
+		// look if the player reached the goal
+		if (!m_gameManager.GoalAchieved ())
+		{
+			return;
+		}
+
 		// look if the game want to say something before it loads the next level
 		if (level)
 		{
@@ -210,8 +221,23 @@ public class LevelManager : MonoBehaviour
 
 	void EndLevel ()
 	{
-		Debug.Log ("fuuuuck");
 		// make the next level to be loaded
 		m_gameManager.HasLevelFinished = true;
+	}
+
+	public void Shout (string message)
+	{
+		shoutText.color = m_gameManager.GetCurrentColor ();
+		shoutText.text = message;
+		// todo: play a sound here
+		Utility.AngerCameraShake ();
+		StartCoroutine (CalmDown ());
+	}
+
+	IEnumerator CalmDown ()
+	{
+		yield return new WaitForSeconds (2f);
+		shoutText.text = "";
+		shoutText.color = Color.white;
 	}
 }

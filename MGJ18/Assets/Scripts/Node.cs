@@ -50,6 +50,7 @@ public class Node : MonoBehaviour
 					m_nodeValueText.color = m_nodeValuePrefabColor;
 				}
 			}
+
 			if (!isExit)
 			{
 				// update the amount of points for the player
@@ -59,7 +60,18 @@ public class Node : MonoBehaviour
 				}
 				else
 				{
-					m_gameManager.UpdatePoints (nodeValue * -1);
+					if (m_gameManager.Emotion != Emotion.ANGER)
+					{
+						m_gameManager.UpdatePoints (nodeValue * -1);
+					}
+					else
+					{
+						if (m_hits >= 1)
+						{
+							m_gameManager.UpdatePoints (nodeValue * -1);
+						}
+					}
+					m_hits = 0;
 				}
 			}
 		}
@@ -67,6 +79,13 @@ public class Node : MonoBehaviour
 
 	SpriteRenderer m_spriteRenderer;
 	public SpriteRenderer SpriteRenderer { get { return m_spriteRenderer; } }
+
+	private int m_hits = 0;
+	public int Hits
+	{
+		get { return m_hits; }
+		set { m_hits = value; }
+	}
 
 	// ═══╣ privates ╠═══
 	GameManager m_gameManager;

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
 	public GameObject emotionColorsPrefab;
 	public static bool initialCallMade = false;
 	public float enableInputDelay = 0f;
+	public UnityEvent playStartedEvent;
 
 	// ═══╣ properties ╠═══
 	bool m_hasLevelStarted = false;
@@ -41,8 +42,10 @@ public class GameManager : MonoBehaviour
 	Color m_developerColor = Color.magenta;
 	public Color DeveloperColor { get { return m_developerColor; } }
 
+	int m_points;
+	public int Points { get { return m_points; } }
+
 	// ═══╣ privates ╠═══
-	int points;
 	Node exitNode;
 	bool m_ignoreInput;
 	PlayerManager m_player;
@@ -53,9 +56,11 @@ public class GameManager : MonoBehaviour
 	[DllImport ("__Internal")]
 	static extern void CheckRecord ();
 	[DllImport ("__Internal")]
-	static extern void PutInList (int id, string color);
-	[DllImport ("__Internal")]
 	static extern void SetBackgroundColor (string color);
+	[DllImport ("__Internal")]
+	static extern void StoreEmotion (int id);
+	[DllImport ("__Internal")]
+	static extern void KillMe ();
 
 	// ═══╣ methods ╠═══
 	void Awake ()
@@ -118,7 +123,6 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator StartLevelRoutine ()
 	{
-		Debug.Log ("Start level");
 		m_player.playerInput.InputEnabled = false;
 		m_ignoreInput = true;
 
@@ -131,14 +135,12 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator PlayLevelRoutine ()
 	{
-		Debug.Log ("Play level");
 		m_isGamePlaying = true;
-		// yield return new WaitForSeconds (enableInputDelay);
 		m_player.playerInput.InputEnabled = true;
 		m_ignoreInput = false;
 
 		// trigger any events related with the play start
-		// ...
+		playStartedEvent.Invoke ();
 
 		while (m_isGamePlaying)
 		{
@@ -149,7 +151,6 @@ public class GameManager : MonoBehaviour
 	// end stage after gameplay is complete (exit reached, required points achieved)
 	IEnumerator EndLevelRoutine ()
 	{
-		Debug.Log ("End level");
 		m_player.playerInput.InputEnabled = false;
 		m_ignoreInput = true;
 
@@ -160,7 +161,14 @@ public class GameManager : MonoBehaviour
 
 		if (nextLevel != "0")
 		{
-			StartCoroutine (ChangeScene ("Level " + nextLevel));
+			if (nextLevel == "8")
+			{
+				StartCoroutine (ChangeScene ("TheEnd"));
+			}
+			else
+			{
+				StartCoroutine (ChangeScene ("Level " + nextLevel));
+			}
 		}
 		else
 		{
@@ -188,8 +196,14 @@ public class GameManager : MonoBehaviour
 
 	public void UpdatePoints (int value)
 	{
-		points += value;
-		exitNode.UpdatePoints (points);
+		m_points += value;
+
+		if (m_points < 0)
+		{
+			m_points = 0;
+		}
+
+		exitNode.UpdatePoints (Points);
 	}
 
 	public void ExitReached ()
@@ -206,7 +220,7 @@ public class GameManager : MonoBehaviour
 
 	public bool GoalAchieved ()
 	{
-		return points == exitNode.nodeValue;
+		return Points == exitNode.nodeValue;
 	}
 
 	IEnumerator ChangeScene (string sceneName)
@@ -226,10 +240,36 @@ public class GameManager : MonoBehaviour
 		return m_ignoreInput;
 	}
 
+	public void PickEmotionExcluding (int emotionIndex)
+	{
+		if (System.Enum.IsDefined (typeof (Emotion), ++emotionIndex))
+		{
+			m_emotion = (Emotion) emotionIndex;
+		}
+		else
+		{
+			m_emotion = Emotion.ANGER;
+		}
+
+		m_emotionPicked = true;
+		StoreEmotion ();
+	}
+
 	public void PickEmotion (int start = 0)
 	{
 		m_emotion = (Emotion) Random.Range (start, System.Enum.GetValues (typeof (Emotion)).Length);
 		m_emotionPicked = true;
+	}
+
+	public void StoreEmotion ()
+	{
+		if (m_isWeb)
+		{
+			// store the current emotion in Local Storage so the next time the player
+			// enters the game, we'll assure another emotion will be shown
+			// tanks: https://docs.unity3d.com/560/Documentation/Manual/webgl-interactingwithbrowserscripting.html
+			StoreEmotion (m_emotion.GetHashCode ());
+		}
 	}
 
 	public void EndGame ()
@@ -239,10 +279,9 @@ public class GameManager : MonoBehaviour
 		string hexEmotionColor = ColorUtility.ToHtmlStringRGB (emotionColor);
 		if (m_isWeb)
 		{
-			// tanks: https://docs.unity3d.com/560/Documentation/Manual/webgl-interactingwithbrowserscripting.html
 			// call the JavaScript function that will store the data in LocalStorage
 			// so the next time the player enters the game, she will be aware of it
-			PutInList (m_emotion.GetHashCode (), hexEmotionColor);
+			StoreEmotion ();
 		}
 		else
 		{
@@ -253,16 +292,13 @@ public class GameManager : MonoBehaviour
 	IEnumerator CloseGame ()
 	{
 		yield return new WaitForSeconds (5f);
-		Debug.Log ("Here's when the game closes");
 		Application.Quit ();
 	}
 
 	public void RestartLevel ()
 	{
-		// Scene scene = SceneManager.GetActiveScene ();
-		// SceneManager.LoadScene (scene.name);
-		points = 0;
-		exitNode.UpdatePoints (points);
+		m_points = 0;
+		exitNode.UpdatePoints (m_points);
 	}
 
 	public void PlayLevel ()
@@ -291,5 +327,18 @@ public class GameManager : MonoBehaviour
 		{
 			SetBackgroundColor (ColorUtility.ToHtmlStringRGB (GetCurrentColor ()));
 		}
+	}
+
+	public void KillGame ()
+	{
+		if (m_isWeb)
+		{
+			KillMe ();
+		}
+	}
+
+	public void Dead ()
+	{
+		GoToScene ("Dead");
 	}
 }

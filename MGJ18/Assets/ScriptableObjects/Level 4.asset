@@ -24,7 +24,8 @@ MonoBehaviour:
   - Welcome to the jungle green monkeeeeeeey!
   - Team Humanity is cutting out the trees to steal your bananas...those selfish
   - Jump from vine to vine until you reach the exit to the next stage.
-  - Hurry up!
+  - 'You have # to complete the level!!!!'
+  - 
   introSurprise:
   - Skept-i-Cism is trying to convert all the people in Faithyrule against their princess.
   - He wants a government based on fear and lies.
@@ -33,10 +34,15 @@ MonoBehaviour:
   introRejectedAnger: []
   introRejectedJoy: []
   introRejectedSurprise: []
-  expectedPath: 0b0000000c00000011000000160000001700000018000000130000000e0000000f000000
   exitReachedAnger:
-  - Good job!!!!
-  - Lets see...20 adults, 30 children, a dog, 3 cats...all dead
-  - Next chaaaaaaaaaaaallenge!!!
-  exitReachedJoy: []
-  exitReachedSurprise: []
+  - Excelent!!! They look pretty dead.
+  - Next Mission
+  exitReachedJoy:
+  - You made it! That part of the holes was amazing
+  - Such skills
+  - Now, to River Ambi-Ance
+  exitReachedSurprise:
+  - Good speech. All the inhabitants won't vote for Skept-i-Cism.
+  - Now. On the way to Ziha.
+  expectedPath: 0b0000000c00000011000000160000001700000018000000130000000e0000000f000000
+  expectedTime: 5

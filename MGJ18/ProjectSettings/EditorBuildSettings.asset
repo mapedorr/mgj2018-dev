@@ -18,20 +18,20 @@ EditorBuildSettings:
     path: Assets/Scenes/Level 3.unity
     guid: 9245696e70001ae408ce4aab00677068
   - enabled: 1
-    path: Assets/Scenes/Level 4.unity
-    guid: 307627b89ce3fa844a3b83ea9de03b93
-  - enabled: 1
-    path: Assets/Scenes/Level 5.unity
-    guid: a4c84889464a14b479066f8a9b2b5c3e
-  - enabled: 1
-    path: Assets/Scenes/Level 6.unity
-    guid: 695e8e3218b489f4ab3811ed5b895cfc
-  - enabled: 1
-    path: Assets/Scenes/Level 7.unity
-    guid: c5664259bad0143408f367bf2f89b527
-  - enabled: 1
     path: Assets/Scenes/FirstEnd.unity
     guid: c1d00ed659713f24ebb4b0e74facde53
   - enabled: 1
     path: Assets/Scenes/Monologue.unity
     guid: 75eb84c1535474844b226530312f3a75
+  - enabled: 1
+    path: Assets/Scenes/Level 4.unity
+    guid: 307627b89ce3fa844a3b83ea9de03b93
+  - enabled: 1
+    path: Assets/Scenes/Level 5.unity
+    guid: 19600c0c0cfa9034d877f64e2d72272c
+  - enabled: 1
+    path: Assets/Scenes/TheEnd.unity
+    guid: 71b8e0d8bb00e474e8fe1ac143aa0123
+  - enabled: 1
+    path: Assets/Scenes/Dead.unity
+    guid: aeddfff39aa87e94f99277feadc698c8

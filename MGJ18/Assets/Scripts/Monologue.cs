@@ -227,7 +227,11 @@ public class Monologue : MonoBehaviour
 		}
 		else
 		{
-			// show the buttons to allow the player pick the game this game will be
+			// store in local storage the current emotion, so the next time the player
+			// loads the game, another emotion will be picked
+			m_gameManager.StoreEmotion ();
+
+			// go to the title screen to load the new game
 			m_gameManager.GoToScene ("Title");
 		}
 	}
@@ -242,14 +246,12 @@ public class Monologue : MonoBehaviour
 	{
 		int newEmotionIndex = 0;
 		int iterations = -1;
-		Debug.Log ("Current emotion: " + m_emotionIndex);
 		do
 		{
 			iterations++;
 			m_gameManager.PickEmotion ();
 			newEmotionIndex = m_gameManager.Emotion.GetHashCode ();
 		} while (newEmotionIndex == m_emotionIndex);
-		Debug.Log ("New emotion: " + newEmotionIndex + " in " + iterations + " iterations");
 		m_emotionIndex = newEmotionIndex;
 		m_dialogue = m_presentationTexts[m_emotionIndex];
 		m_button = m_buttonTexts[m_emotionIndex];
